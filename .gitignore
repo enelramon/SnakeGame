@@ -1,0 +1,8 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/SnakeGame.*/bin/**/*.*
+/SnakeGame.*/obj/**/*.*
+/SnakeGame.*/.vs
