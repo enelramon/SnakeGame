@@ -8,24 +8,29 @@ partial class SnakeForm
 
     private void InitializeComponent()
     {
-        _gamePanel = new GamePanel
-        {
-            Location  = new Point(0, 0),
-            Size      = new Size(GridWidth * Renderer.CellSize, GridHeight * Renderer.CellSize + HudHeight),
-            BackColor = Color.FromArgb(30, 30, 30)
-        };
-        _gamePanel.Paint += (_, e) => Renderer.Render(e.Graphics, _engine.State);
-
+        _gamePanel = new GamePanel();
         SuspendLayout();
-        Text            = "Snake — Programación Funcional en C#  |  Enel - .NET";
-        ClientSize      = new Size(GridWidth * Renderer.CellSize, GridHeight * Renderer.CellSize + HudHeight);
-        FormBorderStyle = FormBorderStyle.FixedSingle;
-        MaximizeBox     = false;
-        StartPosition   = FormStartPosition.CenterScreen;
-        BackColor       = Color.FromArgb(20, 20, 20);
-        KeyPreview      = true;
-        KeyDown        += OnKeyDown;
+        // 
+        // _gamePanel
+        // 
+        _gamePanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+        _gamePanel.Location = new Point(5, 4);
+        _gamePanel.Name = "_gamePanel";
+        _gamePanel.Size = new Size(711, 553);
+        _gamePanel.TabIndex = 0;
+        // 
+        // SnakeForm
+        // 
+        BackColor = Color.FromArgb(20, 20, 20);
+        ClientSize = new Size(719, 562);
         Controls.Add(_gamePanel);
+        FormBorderStyle = FormBorderStyle.FixedSingle;
+        KeyPreview = true;
+        MaximizeBox = false;
+        Name = "SnakeForm";
+        StartPosition = FormStartPosition.CenterScreen;
+        Text = "Snake — Programación Funcional en C#  |  Enel - .NET";
+        KeyDown += OnKeyDown;
         ResumeLayout(false);
     }
 
