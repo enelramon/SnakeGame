@@ -1,0 +1,75 @@
+@page "/"
+@rendermode InteractiveServer
+@using SnakeGame.Shared.Engine
+@using SnakeGame.Blazor.Components.Game
+@inject GameEngine Game
+@implements IDisposable
+
+<PageTitle>Snake – Programación Funcional</PageTitle>
+
+<div class="game-wrapper"
+     tabindex="0"
+     @ref="_container"
+     @onkeydown="OnKeyDown"
+     @onkeydown:preventDefault="true">
+
+    <div class="game-area">
+        <div class="canvas-container">
+            <GameCanvas State="Game.State" />
+            <Overlay State="Game.State" OnAction="HandleActionButton" />
+        </div>
+        <HUD State="Game.State" />
+    </div>
+    <DPad OnDirection="HandleDirection" />
+</div>
+
+@code {
+    private ElementReference _container;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            await _container.FocusAsync();
+    }
+
+    protected override void OnInitialized()
+    {
+        Game.OnChange += OnGameChanged;
+    }
+
+    private void OnGameChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void OnKeyDown(KeyboardEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case "ArrowUp"    or "w" or "W": Game.ChangeDirection(Direction.Up);    break;
+            case "ArrowDown"  or "s" or "S": Game.ChangeDirection(Direction.Down);  break;
+            case "ArrowLeft"  or "a" or "A": Game.ChangeDirection(Direction.Left);  break;
+            case "ArrowRight" or "d" or "D": Game.ChangeDirection(Direction.Right); break;
+            case " ":                         Game.HandleSpace();                    break;
+            case "r" or "R":                 Game.RestartGame();                    break;
+            case "Escape":                   Game.TogglePause();                    break;
+        }
+    }
+
+    private void HandleActionButton()
+    {
+        Game.HandleSpace();
+        _ = _container.FocusAsync();
+    }
+
+    private async Task HandleDirection(Direction dir)
+    {
+        Game.ChangeDirection(dir);
+        await _container.FocusAsync();
+    }
+
+    public void Dispose()
+    {
+        Game.OnChange -= OnGameChanged;
+    }
+}

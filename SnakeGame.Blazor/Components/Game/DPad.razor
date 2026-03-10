@@ -1,0 +1,13 @@
+@using SnakeGame.Shared.Models
+
+<div class="dpad">
+    <button class="dpad-btn dpad-up"    @onclick="() => OnDirection.InvokeAsync(Direction.Up)"    title="Arriba">▲</button>
+    <button class="dpad-btn dpad-left"  @onclick="() => OnDirection.InvokeAsync(Direction.Left)"  title="Izquierda">◀</button>
+    <button class="dpad-btn dpad-center" disabled>●</button>
+    <button class="dpad-btn dpad-right" @onclick="() => OnDirection.InvokeAsync(Direction.Right)" title="Derecha">▶</button>
+    <button class="dpad-btn dpad-down"  @onclick="() => OnDirection.InvokeAsync(Direction.Down)"  title="Abajo">▼</button>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public EventCallback<Direction> OnDirection { get; set; }
+}

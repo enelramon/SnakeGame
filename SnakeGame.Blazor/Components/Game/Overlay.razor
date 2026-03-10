@@ -1,0 +1,50 @@
+@using SnakeGame.Shared.Models
+
+@if (State.Status != GameStatus.Playing)
+{
+    <div class="overlay">
+        <div class="overlay-box">
+            <h1 class="overlay-title">@Title</h1>
+            <p class="overlay-sub">@Subtitle</p>
+            <p class="overlay-hint">@Hint</p>
+            <button class="btn-action" @onclick="OnAction">@ActionLabel</button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter, EditorRequired] public GameState State    { get; set; } = null!;
+    [Parameter, EditorRequired] public EventCallback OnAction { get; set; }
+
+    private string Title => State.Status switch
+    {
+        GameStatus.NotStarted => "SNAKE",
+        GameStatus.GameOver   => "GAME OVER",
+        GameStatus.Paused     => "PAUSADO",
+        _                     => ""
+    };
+
+    private string Subtitle => State.Status switch
+    {
+        GameStatus.NotStarted => "Programación Funcional en C#",
+        GameStatus.GameOver   => $"Puntaje final: {State.Score}",
+        GameStatus.Paused     => $"Score: {State.Score}",
+        _                     => ""
+    };
+
+    private string Hint => State.Status switch
+    {
+        GameStatus.NotStarted => "Presiona ESPACIO o el botón para iniciar",
+        GameStatus.GameOver   => "Presiona ESPACIO para reiniciar",
+        GameStatus.Paused     => "Presiona ESPACIO o el botón para continuar",
+        _                     => ""
+    };
+
+    private string ActionLabel => State.Status switch
+    {
+        GameStatus.NotStarted => "▶ Iniciar",
+        GameStatus.GameOver   => "↺ Reiniciar",
+        GameStatus.Paused     => "▶ Continuar",
+        _                     => ""
+    };
+}

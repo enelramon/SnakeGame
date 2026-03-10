@@ -1,0 +1,74 @@
+@using SnakeGame.Shared.Models
+
+@*
+    Renderizador SVG del tablero de Snake.
+    Implementa conceptualmente IGameRenderer: recibe GameState como parámetro
+    y produce el SVG equivalente al Renderer.cs de WinForms.
+*@
+
+<svg class="game-canvas"
+     width="@(State.GridWidth * CellSize)"
+     height="@(State.GridHeight * CellSize)"
+     viewBox="0 0 @(State.GridWidth * CellSize) @(State.GridHeight * CellSize)"
+     xmlns="http://www.w3.org/2000/svg">
+
+    <!-- Fondo -->
+    <rect width="100%" height="100%" fill="#1e1e1e" />
+
+    <!-- Grilla -->
+    @for (int x = 0; x <= State.GridWidth; x++)
+    {
+        var px = x * CellSize;
+        <line x1="@px" y1="0" x2="@px" y2="@(State.GridHeight * CellSize)"
+              stroke="#2d2d2d" stroke-width="0.5" />
+    }
+    @for (int y = 0; y <= State.GridHeight; y++)
+    {
+        var py = y * CellSize;
+        <line x1="0" y1="@py" x2="@(State.GridWidth * CellSize)" y2="@py"
+              stroke="#2d2d2d" stroke-width="0.5" />
+    }
+
+    <!-- Comida -->
+    @{
+        var food = State.Food;
+        var fx   = food.X * CellSize + CellSize / 2;
+        var fy   = food.Y * CellSize + CellSize / 2;
+        var fr   = CellSize / 2 - 3;
+    }
+    <circle cx="@fx" cy="@fy" r="@fr" fill="#dc3232" />
+    <circle cx="@(fx - fr / 3)" cy="@(fy - fr / 3)" r="@(fr / 3)" fill="rgba(255,180,180,0.45)" />
+
+    <!-- Cuerpo de la serpiente (de atrás hacia adelante) -->
+    @for (int i = State.Snake.Count - 1; i >= 1; i--)
+    {
+        var seg   = State.Snake[i];
+        var alpha = Math.Clamp(255 - i * 5, 80, 255);
+        var color = $"rgba(34,139,34,{alpha / 255.0:F2})";
+        var sx    = seg.X * CellSize + 2;
+        var sy    = seg.Y * CellSize + 2;
+        var sw    = CellSize - 4;
+        <rect x="@sx" y="@sy" width="@sw" height="@sw" fill="@color" rx="2" />
+    }
+
+    <!-- Cabeza -->
+    @if (State.Snake.Count > 0)
+    {
+        var head = State.Snake[0];
+        var hx   = head.X * CellSize + 2;
+        var hy   = head.Y * CellSize + 2;
+        var hw   = CellSize - 4;
+        var eyeR = Math.Max(2, hw / 6);
+        var eyeY = hy + hw / 4;
+        <rect x="@hx" y="@hy" width="@hw" height="@hw" fill="#00e650" rx="3" />
+        <!-- Ojos -->
+        <circle cx="@(hx + hw / 4)"     cy="@eyeY" r="@eyeR" fill="#000" />
+        <circle cx="@(hx + hw * 3 / 5)" cy="@eyeY" r="@eyeR" fill="#000" />
+    }
+</svg>
+
+@code {
+    [Parameter, EditorRequired] public GameState State { get; set; } = null!;
+
+    private const int CellSize = 22;
+}

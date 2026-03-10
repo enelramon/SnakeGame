@@ -1,0 +1,12 @@
+@using SnakeGame.Shared.Models
+
+<div class="hud">
+    <span>🐍 Longitud: @State.Snake.Count</span>
+    <span>Score: @State.Score</span>
+    <span class="hud-controls">← ↑ → ↓ &nbsp;|&nbsp; ESC: Pausa &nbsp;|&nbsp; R: Reiniciar</span>
+    <span>HighScore: @State.HighScore</span>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public GameState State { get; set; } = null!;
+}
